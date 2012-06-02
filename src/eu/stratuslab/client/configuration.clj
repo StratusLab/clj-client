@@ -4,19 +4,22 @@
   (:require [clojure-ini.core :as ini]
             [clojure.java.io :as io]))
 
+(def cfg-file-cwd
+  (io/file (System/getProperty "user.dir")
+           "stratuslab-user.cfg"))
+
+(def cfg-file-home
+  (io/file (System/getProperty "user.home")
+           ".stratuslab"
+           "stratuslab-user.cfg"))
+
 (defn cfg-file 
   "Find the user configuration file to use.  The method first
    looks in the current working directory, then in the 
    .stratuslab directory within the user's home directory. 
    The filename is expected to be stratuslab-user.cfg."
   []
-  (first 
-    (filter #(.exists %)
-            [(io/file (System/getProperty "user.dir")
-                      "stratuslab-user.cfg")
-             (io/file (System/getProperty "user.home")
-                      ".stratuslab"
-                      "stratuslab-user.cfg")])))
+  (some #(if (.exists %) %) [cfg-file-cwd cfg-file-home]))
 
 (defn read-cfg []
   "Read the StratusLab user configuration file as a map."
@@ -35,3 +38,6 @@
     (if-let [k (or (first ks) (:selected_section user-defaults))]
       (merge user-defaults (get-in cfg [k]))
       user-defaults)))
+
+(def ^:dynamic *cfg* (cloud-cfg))
+

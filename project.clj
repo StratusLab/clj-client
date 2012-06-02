@@ -10,7 +10,7 @@
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [clojure-ini "0.0.1"]
                  [clj-http "0.4.1"]
-                 [necessary-evil "1.2.2"]
+                 [org.apache.xmlrpc/xmlrpc-client "3.1.3"]
                  [lein-eclipse "1.0.0"]])
 
 
