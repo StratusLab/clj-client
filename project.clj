@@ -6,7 +6,7 @@
   :aot [eu.stratuslab.client.compute
         eu.stratuslab.client.storage
         eu.stratuslab.client.configuration
-        eu.stratuslab.client.start]
+        eu.stratuslab.client.ssl]
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [clojure-ini "0.0.1"]
                  [clj-http "0.4.1"]

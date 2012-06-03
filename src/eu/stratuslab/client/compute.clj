@@ -1,14 +1,25 @@
 (ns eu.stratuslab.client.compute
   "Contains commands to interact with OpenNebula."
-  (:use [eu.stratuslab.client.configuration :only (*cfg*)])
+  (:use [eu.stratuslab.client.configuration :only (*cfg*)]
+        [clojure.walk :only (postwalk)])
   (:require [clojure.xml :as xml])
   (:import [org.apache.xmlrpc.client XmlRpcClient XmlRpcClientConfigImpl]
            [java.net URL]
            [java.io ByteArrayInputStream]))
 
-(defn get-struct-map [xml]
+(defn get-xml-map [xml]
   (let [stream (ByteArrayInputStream. (.getBytes (.trim xml)))]
     (xml/parse stream)))
+
+(defn reformat [m]
+  (cond
+    (map? m) (let [{:keys [tag content]} m] {tag content})
+    (and (vector? m) (= 1 (count m))) (first m)
+    (and (vector? m) (every? map? m)) (apply merge m)
+    :else m))
+
+(defn reformat-xml-map [m]
+  (postwalk reformat m))
 
 (defn create-xmlrpc-client []
   (let [config (XmlRpcClientConfigImpl.)
@@ -97,7 +108,7 @@ target = \"hdd\"
 (defmethod compute :list
   [& args]
   (let [[flag info] (list-instances)]
-    (get-struct-map info)))
+    (reformat-xml-map (get-xml-map info))))
 
 (defmethod compute :start
   [& args]
