@@ -19,7 +19,7 @@
   (let [request-opts (merge {:method :delete} opts)]
     (get-in (http/request request-opts) [:body :uuid])))
 
-(defn extract-options [ & args]
+(defn- extract-options [ & args]
   (let [uuid (first args)
         host (or (:pdisk_endpoint *cfg*) (:endpoint *cfg*))
         username (:username *cfg*)
