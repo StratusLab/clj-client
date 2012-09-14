@@ -23,9 +23,11 @@
 
 (defn read-cfg []
   "Read the StratusLab user configuration file as a map."
-  (ini/read-ini (cfg-file)
-            :keywordize? true 
-            :comment-char \#))
+  (if-let [cfg-file (cfg-file)]
+    (ini/read-ini (cfg-file)
+                  :keywordize? true 
+                  :comment-char \#)
+    {}))
 
 (defn cloud-cfg 
   "Provide merged map of cloud configuration parameters for
